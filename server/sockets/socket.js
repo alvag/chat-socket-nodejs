@@ -19,7 +19,7 @@ io.on('connection', (client) => {
         users.addUser(client.id, user.name, user.room);
 
         client.broadcast.to(user.room).emit('listUsers', users.getUsersByRoom(user.room));
-
+        client.broadcast.to(user.room).emit('sendMessage', createMessage('Administrador', `${user.name} se unió al chat.`));
         callback(users.getUsersByRoom(user.room));
     });
 
@@ -27,15 +27,13 @@ io.on('connection', (client) => {
         let user = users.getUser(client.id);
         let message = createMessage(user.name, msg.message);
         client.broadcast.to(user.room).emit('sendMessage', message);
-
-        callback(msg);
+        callback(message);
     });
 
     client.on('disconnect', () => {
         let deletedUser = users.deleteUser(client.id);
 
         client.broadcast.to(deletedUser.room).emit('sendMessage', createMessage('Administrador', `${deletedUser.name} abandonó el chat`));
-
         client.broadcast.to(deletedUser.room).emit('listUsers', users.getUsersByRoom(deletedUser.room));
     });
 

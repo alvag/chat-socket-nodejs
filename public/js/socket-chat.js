@@ -31,7 +31,8 @@ socket.on('disconnect', () => {
 }); */
 
 socket.on('sendMessage', (message) => {
-    renderMessages(message);
+    renderMessages(message, false);
+    scrollBottom();
 });
 
 socket.on('listUsers', (users) => {

@@ -7,6 +7,7 @@ let divUsuarios = $('#divUsuarios');
 let sendForm = $('#sendForm');
 let message = $('#message');
 let divChatbox = $('#divChatbox');
+let btnSendMessage = $('#sendMessage');
 
 const renderUsers = (users) => {
     let html = '';
@@ -27,22 +28,63 @@ const renderUsers = (users) => {
     divUsuarios.html(html);
 };
 
-const renderMessages = (message) => {
+const renderMessages = (message, me) => {
     let html = '';
 
-    html += `
-    <li class="animated fadeIn">
-        <div class="chat-img"><img src="assets/images/users/1.jpg" alt="user" /></div>
-        <div class="chat-content">
-            <h5>${message.name}</h5>
-            <div class="box bg-light-info">${message.message}</div>
-        </div>
-        <div class="chat-time">10:56 am</div>
-    </li>
-    `;
+    let date = new Date(message.sent);
+    let hour = `${date.getHours()}:${date.getMinutes()}`;
+
+    let adminClass = 'info';
+
+    if (message.name === 'Administrador') {
+        adminClass = 'danger';
+    }
+
+    if (me) {
+        html += `
+            <li class="reverse animated fadeIn">
+                <div class="chat-content">
+                    <h5>${message.name}</h5>
+                    <div class="box bg-light-inverse">${message.message}</div>
+                </div>
+                <div class="chat-img"><img src="assets/images/users/5.jpg" alt="user" /></div>
+                <div class="chat-time">${hour}</div>
+            </li>
+            `;
+    } else {
+        html += `
+            <li class="animated fadeIn">`
+        if (message.name !== 'Administrador') {
+            html += '<div class="chat-img"><img src="assets/images/users/1.jpg" alt="user" /></div>';
+        }
+        html += `<div class="chat-content">
+                <h5>${message.name}</h5>
+                <div class="box bg-light-${adminClass}">${message.message}</div>
+            </div>
+            <div class="chat-time">${hour}</div>
+        </li>
+            `;
+    }
 
     divChatbox.append(html);
 };
+
+const sendMessage = () => {
+    if (message.val().trim().length > 0) {
+        socket.emit('sendMessage', {
+            name,
+            message: message.val()
+        }, (response) => {
+            message.val('').focus();
+            renderMessages(response, true);
+            scrollBottom();
+        });
+    }
+};
+
+btnSendMessage.on('click', function () {
+    sendMessage();
+});
 
 divUsuarios.on('click', 'a', function () {
     let id = $(this).data('id');
@@ -53,16 +95,5 @@ divUsuarios.on('click', 'a', function () {
 
 sendForm.on('submit', function (e) {
     e.preventDefault();
-
-    console.log(message.val());
-
-    if (message.val().trim().length > 0) {
-        socket.emit('sendMessage', {
-            name,
-            message: message.val()
-        }, (response) => {
-            message.val('').focus();
-            renderMessages(response);
-        });
-    }
+    sendMessage();
 });
