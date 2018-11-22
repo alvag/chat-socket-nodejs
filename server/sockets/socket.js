@@ -23,10 +23,12 @@ io.on('connection', (client) => {
         callback(users.getUsersByRoom(user.room));
     });
 
-    client.on('sendMessage', (msg) => {
+    client.on('sendMessage', (msg, callback) => {
         let user = users.getUser(client.id);
         let message = createMessage(user.name, msg.message);
         client.broadcast.to(user.room).emit('sendMessage', message);
+
+        callback(msg);
     });
 
     client.on('disconnect', () => {

@@ -31,7 +31,7 @@ socket.on('disconnect', () => {
 }); */
 
 socket.on('sendMessage', (message) => {
-    console.log('Servidor:', message);
+    renderMessages(message);
 });
 
 socket.on('listUsers', (users) => {
