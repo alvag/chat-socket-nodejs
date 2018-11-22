@@ -25,7 +25,6 @@ socket.on('disconnect', () => {
 });
 
 /* socket.emit('sendMessage', {
-    user: 'Max Alva',
     messaje: 'Hello World'
 }, (response) => {
     console.log('Server response', response);
