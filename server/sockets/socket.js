@@ -7,14 +7,16 @@ const users = new Users();
 io.on('connection', (client) => {
 
     client.on('startChat', (user, callback) => {
-        if (!user.name) {
+        if (!user.name || !user.room) {
             return callback({
                 error: true,
-                messaje: 'El nombre es requerido'
+                messaje: 'El nombre y la sala son requeridos'
             });
         }
 
-        let listUsers = users.addUser(client.id, user.name);
+        client.join(user.room);
+
+        let listUsers = users.addUser(client.id, user.name, user.room);
 
         client.broadcast.emit('listUsers', users.getUsers());
 

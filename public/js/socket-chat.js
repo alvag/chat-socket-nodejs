@@ -2,13 +2,14 @@ let socket = io();
 
 let params = new URLSearchParams(window.location.search);
 
-if (!params.has('name')) {
+if (!params.has('name') || !params.has('room')) {
     window.location = '/';
-    throw new Error('El nombre es requerido');
+    throw new Error('El nombre y sala son requeridos');
 }
 
 let user = {
-    name: params.get('name')
+    name: params.get('name'),
+    room: params.get('room')
 };
 
 socket.on('connect', () => {
