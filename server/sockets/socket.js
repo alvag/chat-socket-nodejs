@@ -16,25 +16,25 @@ io.on('connection', (client) => {
 
         client.join(user.room);
 
-        let listUsers = users.addUser(client.id, user.name, user.room);
+        users.addUser(client.id, user.name, user.room);
 
-        client.broadcast.emit('listUsers', users.getUsers());
+        client.broadcast.to(user.room).emit('listUsers', users.getUsersByRoom(user.room));
 
-        callback(listUsers);
+        callback(users.getUsersByRoom(user.room));
     });
 
     client.on('sendMessage', (msg) => {
         let user = users.getUser(client.id);
         let message = createMessage(user.name, msg.message);
-        client.broadcast.emit('sendMessage', message);
+        client.broadcast.to(user.room).emit('sendMessage', message);
     });
 
     client.on('disconnect', () => {
         let deletedUser = users.deleteUser(client.id);
 
-        client.broadcast.emit('sendMessage', createMessage('Administrador', `${deletedUser.name} abandonó el chat`));
+        client.broadcast.to(deletedUser.room).emit('sendMessage', createMessage('Administrador', `${deletedUser.name} abandonó el chat`));
 
-        client.broadcast.emit('listUsers', users.getUsers());
+        client.broadcast.to(deletedUser.room).emit('listUsers', users.getUsersByRoom(deletedUser.room));
     });
 
     // Mensajes privados
