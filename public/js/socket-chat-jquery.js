@@ -9,6 +9,8 @@ let message = $('#message');
 let divChatbox = $('#divChatbox');
 let btnSendMessage = $('#sendMessage');
 
+
+
 const renderUsers = (users) => {
     let html = '';
     html += `
@@ -93,14 +95,20 @@ btnSendMessage.on('click', function () {
     sendMessage();
 });
 
+sendForm.on('submit', function (e) {
+    e.preventDefault();
+    sendMessage();
+});
+
+message.keydown(function (e) {
+    if (e.ctrlKey && e.keyCode === 13) {
+        sendMessage();
+    }
+});
+
 divUsuarios.on('click', 'a', function () {
     let id = $(this).data('id');
     if (id) {
         console.log(id);
     }
-});
-
-sendForm.on('submit', function (e) {
-    e.preventDefault();
-    sendMessage();
 });
