@@ -53,7 +53,7 @@ const renderMessages = (message, me) => {
             `;
     } else {
         html += `
-            <li class="animated fadeIn">`
+            <li class="animated fadeIn">`;
         if (message.name !== 'Administrador') {
             html += '<div class="chat-img"><img src="assets/images/users/1.jpg" alt="user" /></div>';
         }
@@ -71,9 +71,16 @@ const renderMessages = (message, me) => {
 
 const sendMessage = () => {
     if (message.val().trim().length > 0) {
+
+        let mensaje = message.val();
+
+        mensaje = mensaje.replace(/\r?\n/g, '<br />');
+
+        console.log(message.val());
+
         socket.emit('sendMessage', {
             name,
-            message: message.val()
+            message: mensaje
         }, (response) => {
             message.val('').focus();
             renderMessages(response, true);
