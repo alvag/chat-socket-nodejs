@@ -1,8 +1,22 @@
-// eslint-disable-next-line no-undef
 let socket = io();
+
+let params = new URLSearchParams(window.location.search);
+
+if (!params.has('name')) {
+    window.location = '/';
+    throw new Error('El nombre es requerido');
+}
+
+let user = {
+    name: params.get('name')
+};
 
 socket.on('connect', () => {
     console.log('Conectado al servidor');
+
+    socket.emit('startChat', user, (usuarios) => {
+        console.log('Usuarios conectados', usuarios);
+    });
 });
 
 socket.on('disconnect', () => {

@@ -1,31 +1,31 @@
 class Users {
 
     constructor() {
-        this.persons = [];
+        this.users = [];
     }
 
-    addPerson(id, name) {
-        let person = { id, name };
-        this.persons.push(person);
-        return this.persons;
+    addUser(id, name) {
+        let user = { id, name };
+        this.users.push(user);
+        return this.users;
     }
 
-    getPerson(id) {
-        return this.persons.filter(person => person.id === id)[0];
+    getUser(id) {
+        return this.users.filter(user => user.id === id)[0];
     }
 
-    getPersons() {
-        return this.persons;
+    getUsers() {
+        return this.users;
     }
 
-    getPersonsByRoom(room) { }
+    getUsersByRoom(room) { }
 
-    deletePerson(id) {
-        let deletedPerson = this.getPerson(id);
-        this.persons = this.persons.filter(person => person.id !== id);
-        return deletedPerson;
+    deleteUser(id) {
+        let deletedUser = this.getUser(id);
+        this.users = this.users.filter(user => user.id !== id);
+        return deletedUser;
     }
 
 }
 
-module.exports = Users;
+module.exports = { Users };
