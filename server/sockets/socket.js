@@ -34,4 +34,19 @@ io.on('connection', (client) => {
 
         client.broadcast.emit('listUsers', users.getUsers());
     });
+
+    // Mensajes privados
+
+    client.on('privateMessage', (msg, callback) => {
+        if (!msg.to) {
+            return callback({
+                error: true,
+                messaje: 'El ID del usuario receptor es requerido'
+            });
+        }
+
+        let user = users.getUser(client.id);
+
+        client.broadcast.to(msg.to).emit('privateMessage', createMessage(user.name, msg.message));
+    });
 });

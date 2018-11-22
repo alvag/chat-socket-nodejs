@@ -37,3 +37,9 @@ socket.on('sendMessage', (message) => {
 socket.on('listUsers', (users) => {
     console.table(users);
 });
+
+// Mensajes privados
+
+socket.on('privateMessage', (message) => {
+    console.log('Mensaje privado', message);
+});
