@@ -15,6 +15,19 @@ io.on('connection', (client) => {
 
         let listUsers = users.addUser(client.id, user.name);
 
+        client.broadcast.emit('listUsers', users.getUsers());
+
         callback(listUsers);
+    });
+
+    client.on('disconnect', () => {
+        let deletedUser = users.deleteUser(client.id);
+
+        client.broadcast.emit('sendMessage', {
+            user: 'Administrador',
+            message: `${deletedUser.name} abandonó el chat`
+        });
+
+        client.broadcast.emit('listUsers', users.getUsers());
     });
 });
